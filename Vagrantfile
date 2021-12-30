@@ -33,4 +33,8 @@ Vagrant.configure("2") do |config|
       # Name of the file with Ansible Playbook definition
       ansible.playbook = "install-devstack.yml"
     end
+
+    config.vm.provision "ansible" do |ansible|
+      ansible.playbook = "ip-settings.yml"
+    end
   end

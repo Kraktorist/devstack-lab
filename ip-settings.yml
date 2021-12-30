@@ -1,0 +1,31 @@
+- name: IP Settings
+  hosts: all
+  become: yes
+  become_user: root
+  tasks:
+    # - name: IP forwarind
+    #   shell: echo 1 > /proc/sys/net/ipv4/ip_forward
+    # - name: IP proxy_arp
+    #   shell: echo 1 > /proc/sys/net/ipv4/conf/eth1/proxy_arp
+    # - name: iptables postrouting
+    #   shell: iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE 
+    - name: iptables POSTROUTING
+      ansible.builtin.iptables:
+        table: nat
+        chain: POSTROUTING
+        out_interface: eth1
+        jump: MASQUERADE
+
+    - name: proxy_arp enabling
+      sysctl:
+        name: net.ipv4.conf.eth1.proxy_arp
+        value: '1'
+        state: present
+        reload: yes
+
+    - name: ip_forward enabling
+      sysctl:
+        name: net.ipv4.ip_forward
+        value: '1'
+        state: present
+        reload: yes
